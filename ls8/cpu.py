@@ -4,6 +4,10 @@ import sys
 
 class CPU:
     """Main CPU class."""
+    ram = [None] * 1000 
+    pc = 0
+    registers = [None] * 8
+
 
     def __init__(self):
         """Construct a new CPU."""
@@ -40,6 +44,9 @@ class CPU:
         else:
             raise Exception("Unsupported ALU operation")
 
+    def ram_read(self, pc):
+        return self.ram[pc]
+
     def trace(self):
         """
         Handy function to print out the CPU state. You might want to call this
@@ -62,4 +69,16 @@ class CPU:
 
     def run(self):
         """Run the CPU."""
-        pass
+        for i in range(len(self.ram)):
+            #LDI
+            if self.ram[i] == 0b10000010:
+                self.registers[int(self.ram[i + 1])] = self.ram[i + 2]
+
+            #print
+            if self.ram[i] == 0b01000111:
+                print(str(int(self.registers[self.ram[i + 1] ])))
+
+            #HLT
+            if self.ram[i] == 0b00000001:
+                return
+
